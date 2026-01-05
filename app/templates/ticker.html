@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ canonical_symbol }} — Recent SEC Filings | ChangeOnly{% endblock %}
+{% block head %}
+<link rel="canonical" href="/ticker/{{ canonical_symbol }}"/>
+{% endblock %}
+
+{% block content %}
+<section class="card">
+  <h1>{{ company.symbol }} <span class="muted">— {{ company.name }}</span></h1>
+  <p class="muted">CIK: {{ company.cik }} • Informational only (not investment advice).</p>
+</section>
+
+<section class="card">
+  <div class="row space">
+    <h2>Recent filings</h2>
+    <a class="btn subtle" href="/dashboard">Track this ticker</a>
+  </div>
+
+  {% if filings %}
+    <ul class="list">
+      {% for f in filings %}
+        <li class="filing">
+          <div class="row space">
+            <div>
+              <strong>{{ f.form_type }}</strong>
+              <span class="muted">filed {{ f.filed_at.date().isoformat() }}</span>
+              {% if f.unstructured %}
+                <span class="badge warn">Unstructured diff</span>
+              {% endif %}
+            </div>
+            <div class="row gap">
+              <a href="/filing/{{ f.id }}">Open</a>
+              <a href="{{ f.filing_url }}" rel="nofollow noopener" target="_blank">SEC</a>
+            </div>
+          </div>
+
+          {% set diffs = diffs_by_filing.get(f.id, []) %}
+          {% if diffs %}
+            <details class="details">
+              <summary>What changed ({{ diffs|length }})</summary>
+              <div class="diffs">
+                {% for d in diffs %}
+                  <details class="details small">
+                    <summary>{{ d.section_title or d.section_key }}</summary>
+                    <!-- HTMX lazy-load diff body -->
+                    <div hx-get="/diff/{{ d.id }}" hx-trigger="revealed" hx-swap="innerHTML">
+                      <div class="muted small">Loading diff…</div>
+                    </div>
+                  </details>
+                {% endfor %}
+              </div>
+            </details>
+          {% else %}
+            <p class="muted">No diffs stored (either first filing of this type, or no meaningful changes detected).</p>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No filings available yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

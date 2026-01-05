@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Login | ChangeOnly{% endblock %}
+
+{% block content %}
+<section class="card">
+  <h1>Login</h1>
+  <p class="muted">Passwordless magic link. We only use your email for login and alerts.</p>
+
+  {% if error %}
+    <p class="error">{{ error }}</p>
+  {% endif %}
+
+  {% if sent %}
+    <p><strong>Check your email.</strong> We sent a login link (valid for 15 minutes).</p>
+    <p class="muted">If email is not configured, the link is printed to server logs as EMAIL_STUB.</p>
+  {% else %}
+    <form method="post" action="/auth/request" class="row gap">
+      <input name="email" type="email" required placeholder="you@example.com" class="input"/>
+      <button class="btn" type="submit">Send login link</button>
+    </form>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>{% block title %}ChangeOnly{% endblock %}</title>
+  <meta name="description" content="{% block meta_desc %}See only what changed between SEC filings — instantly.{% endblock %}">
+  <link rel="stylesheet" href="/static/style.css"/>
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <header class="header">
+    <div class="container row space">
+      <a class="brand" href="/">ChangeOnly</a>
+      <nav class="nav">
+        <a href="/">Search</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p><strong>Disclaimer:</strong> ChangeOnly is informational only and not investment advice. Data may be incomplete or incorrect.</p>
+      <p class="muted">Uses public SEC EDGAR data. Please use responsibly.</p>
+    </div>
+  </footer>
+</body>
+</html>

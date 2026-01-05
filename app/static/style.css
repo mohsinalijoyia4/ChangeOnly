@@ -1,0 +1,87 @@
+:root{
+  --bg:#0b0d10;
+  --card:#12151a;
+  --text:#e8eef7;
+  --muted:#97a3b4;
+  --line:#242a33;
+  --btn:#2b7cff;
+  --warn:#ffb020;
+  --ok:#30d158;
+  --danger:#ff453a;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  background:var(--bg);
+  color:var(--text);
+}
+a{color:#9cc2ff; text-decoration:none}
+a:hover{text-decoration:underline}
+
+.container{max-width:980px; margin:0 auto; padding:16px}
+.header{border-bottom:1px solid var(--line); background:#0b0d10; position:sticky; top:0}
+.brand{font-weight:800; letter-spacing:0.2px}
+.nav a{margin-left:12px; color:var(--muted)}
+.nav a:hover{color:var(--text)}
+.row{display:flex; align-items:center}
+.space{justify-content:space-between}
+.gap{gap:10px}
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:16px;
+  margin:14px 0;
+}
+.input{
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid var(--line);
+  background:#0b0d10;
+  color:var(--text);
+}
+.btn{
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid transparent;
+  background:var(--btn);
+  color:white;
+  cursor:pointer;
+  font-weight:650;
+}
+.btn.subtle{
+  background:transparent;
+  border:1px solid var(--line);
+  color:var(--text);
+}
+.btn:hover{filter:brightness(1.05)}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.error{color:var(--danger)}
+.badge{
+  display:inline-block;
+  padding:2px 8px;
+  border-radius:999px;
+  font-size:12px;
+  margin-left:8px;
+  border:1px solid var(--line);
+}
+.badge.warn{background:rgba(255,176,32,0.12); color:var(--warn)}
+.badge.ok{background:rgba(48,209,88,0.12); color:var(--ok)}
+.list{list-style:none; padding-left:0; margin:0}
+.list li{padding:10px 0; border-bottom:1px solid var(--line)}
+.list li:last-child{border-bottom:none}
+.filing{padding:14px 0}
+.details summary{cursor:pointer; font-weight:650; margin:10px 0}
+.details.small summary{font-weight:600}
+.diffbox{
+  overflow:auto;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px;
+  background:#0b0d10;
+}
+.footer{border-top:1px solid var(--line); margin-top:30px}

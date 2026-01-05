@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Search SEC Filings Diffs | ChangeOnly{% endblock %}
+
+{% block content %}
+<section class="card">
+  <h1>See only what changed between SEC filings — instantly.</h1>
+  <form method="get" action="/" class="row gap">
+    <input name="q" value="{{ q }}" placeholder="Search ticker or company name (e.g., AAPL or Apple)" class="input" />
+    <button class="btn" type="submit">Search</button>
+  </form>
+  <p class="muted">Public, SEO-friendly ticker pages. No sign-up required to browse.</p>
+</section>
+
+{% if q.strip() %}
+<section class="card">
+  <h2>Results for “{{ q }}”</h2>
+  {% if results %}
+    <ul class="list">
+      {% for r in results %}
+        <li>
+          <a href="/ticker/{{ r.symbol }}">{{ r.symbol }}</a>
+          <span class="muted">— {{ r.name }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No matches found.</p>
+  {% endif %}
+</section>
+{% endif %}
+
+<section class="card">
+  <h2>How it works</h2>
+  <ol>
+    <li>We fetch SEC EDGAR filings (10-K, 10-Q, 8-K) using public endpoints.</li>
+    <li>We chunk by “Item …” sections and compute diffs vs the previous filing of the same type.</li>
+    <li>We store only changed sections and (optionally) email watchers only when changes exist.</li>
+  </ol>
+</section>
+{% endblock %}

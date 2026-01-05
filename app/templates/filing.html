@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ filing.symbol }} {{ filing.form_type }} ({{ filing.filed_at.date().isoformat() }}) | ChangeOnly{% endblock %}
+
+{% block content %}
+<section class="card">
+  <h1>{{ filing.symbol }} — {{ filing.form_type }}</h1>
+  <p class="muted">
+    Filed {{ filing.filed_at.date().isoformat() }} •
+    <a href="/ticker/{{ filing.symbol }}">Back to ticker</a> •
+    <a href="{{ filing.filing_url }}" rel="nofollow noopener" target="_blank">SEC original</a>
+  </p>
+  {% if filing.unstructured %}
+    <p class="badge warn">Chunking failed; showing unstructured full-text diff.</p>
+  {% endif %}
+</section>
+
+<section class="card">
+  <h2>What changed</h2>
+  {% if diffs %}
+    {% for d in diffs %}
+      <details class="details">
+        <summary>{{ d.section_title or d.section_key }}</summary>
+        <div hx-get="/diff/{{ d.id }}" hx-trigger="revealed" hx-swap="innerHTML">
+          <div class="muted small">Loading diff…</div>
+        </div>
+      </details>
+    {% endfor %}
+  {% else %}
+    <p class="muted">No diffs stored for this filing.</p>
+  {% endif %}
+</section>
+{% endblock %}

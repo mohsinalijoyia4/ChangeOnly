@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | ChangeOnly{% endblock %}
+
+{% block content %}
+<section class="card">
+  <div class="row space">
+    <div>
+      <h1>Dashboard</h1>
+      <p class="muted">Logged in as {{ user.email }}</p>
+    </div>
+    <form method="post" action="/auth/logout">
+      <button class="btn subtle" type="submit">Log out</button>
+    </form>
+  </div>
+
+  <div class="row space">
+    <div>
+      <p><strong>Email alerts:</strong>
+        {% if user.unsubscribed %}
+          <span class="badge warn">Paused</span>
+        {% else %}
+          <span class="badge ok">On</span>
+        {% endif %}
+      </p>
+      <p class="muted">We only email when diffs exist.</p>
+    </div>
+    <form method="post" action="/dashboard/email/toggle">
+      <button class="btn" type="submit">
+        {% if user.unsubscribed %}Enable alerts{% else %}Pause alerts{% endif %}
+      </button>
+    </form>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Watchlist ({{ watch|length }}/{{ max_watch }})</h2>
+
+  <form method="post" action="/dashboard/watch/add" class="row gap">
+    <input name="symbol" class="input" placeholder="Add ticker (e.g., AAPL)" maxlength="16"/>
+    <button class="btn" type="submit">Add</button>
+  </form>
+
+  {% if request.query_params.get('err') == 'watch_limit' %}
+    <p class="error">Watchlist limit reached ({{ max_watch }}).</p>
+  {% endif %}
+  {% if request.query_params.get('err') == 'bad_symbol' %}
+    <p class="error">Unknown/unsupported ticker.</p>
+  {% endif %}
+
+  {% if watch %}
+    <ul class="list">
+      {% for w in watch %}
+        <li class="row space">
+          <div>
+            <a href="/ticker/{{ w.symbol }}">{{ w.symbol }}</a>
+            <span class="muted">tracked since {{ w.created_at.date().isoformat() }}</span>
+          </div>
+          <form method="post" action="/dashboard/watch/remove">
+            <input type="hidden" name="symbol" value="{{ w.symbol }}"/>
+            <button class="btn subtle" type="submit">Remove</button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="muted">No tickers yet. Add one above.</p>
+  {% endif %}
+</section>
+
+<section class="card">
+  <h2>Recent alerts</h2>
+  {% if alerts %}
+    <ul class="list">
+      {% for a in alerts %}
+        {% set f = filings_by_id.get(a.filing_id) %}
+        <li>
+          <div class="row space">
+            <div>
+              {% if f %}
+                <a href="/filing/{{ f.id }}"><strong>{{ f.symbol }} {{ f.form_type }}</strong></a>
+                <span class="muted">({{ f.filed_at.date().isoformat() }})</span>
+              {% else %}
+                <strong>Filing #{{ a.filing_id }}</strong>
+              {% endif %}
+              <span class="badge {% if a.status=='sent' %}ok{% else %}warn{% endif %}">{{ a.status }}</span>
+            </div>
+            <div class="muted">{{ a.sent_at.strftime("%Y-%m-%d %H:%M") }} UTC</div>
+          </div>
+          {% if a.detail %}
+            <div class="muted small">detail: {{ a.detail }}</div>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="muted">No alerts yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

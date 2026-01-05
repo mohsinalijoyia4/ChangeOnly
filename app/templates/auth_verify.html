@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Verifying | ChangeOnly{% endblock %}
+
+{% block content %}
+<section class="card">
+  <h1>Verifying…</h1>
+  {% if ok %}
+    <p>Success. Redirecting…</p>
+  {% else %}
+    <p class="error">{{ message }}</p>
+    <p><a href="/auth/request">Request a new login link</a></p>
+  {% endif %}
+</section>
+{% endblock %}
